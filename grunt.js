@@ -5,9 +5,9 @@ module.exports = function(grunt) {
   grunt.initConfig({
     meta: {
       version: '0.1.0',
-      banner: '/*! Mysterious Path - v<%= meta.version %> - ' +
+      banner: '/*! Melville - v<%= meta.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        '* http://mysteriouspath.com/\n' +
+        '* http://scottboyle.co.uk/\n' +
         '* Copyright (c) <%= grunt.template.today("yyyy") %> ' +
         'Monospaced; Licensed MIT */'
     },

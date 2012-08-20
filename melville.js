@@ -1,5 +1,5 @@
-/*! Mysterious Path - v0.1.0 - 2012-08-20
-* http://mysteriouspath.com/
+/*! Melville - v0.1.0 - 2012-08-20
+* http://scottboyle.co.uk/
 * Copyright (c) 2012 Monospaced; Licensed MIT */
 
 //
