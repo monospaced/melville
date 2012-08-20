@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <!--
 Jonah 2.1 is based on:
 
@@ -33,31 +33,598 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 -->
-<html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8">
-<title>Jonah</title>
-<script type="text/javascript">
-function $(A){if(typeof A=="string"){return document.getElementById(A)}else{return A}}function clone(A){var B={};for(property in A){B[property]=A[property]}return B}function insertElement(A,D,F,C,E){var B=document.createElement(D);if(F){B.id=F}if(C){B.className=C}if(E){insertText(B,E)}if(A){A.appendChild(B)}return B}function insertText(A,B){return A.appendChild(document.createTextNode(B))}function removeChildren(A){while(A.hasChildNodes()){A.removeChild(A.firstChild)}}function setPageElement(C,B,A){if(place=$(C)){removeChildren(place);if(tale.has(B)){new Wikifier(place,tale.get(B).text)}else{new Wikifier(place,A)}}}function addStyle(B){if(document.createStyleSheet){document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeEnd","&nbsp;<style>"+B+"</style>")}else{var A=document.createElement("style");A.type="text/css";A.appendChild(document.createTextNode(B));document.getElementsByTagName("head")[0].appendChild(A)}}function throwError(A,B){new Wikifier(A,"'' @@ "+B+" @@ ''")}Math.easeInOut=function(A){return(1-((Math.cos(A*Math.PI)+1)/2))};String.prototype.readMacroParams=function(){var C=new RegExp("(?:\\s*)(?:(?:\"([^\"]*)\")|(?:'([^']*)')|(?:\\[\\[([^\\]]*)\\]\\])|([^\"'\\s]\\S*))","mg");var B=[];do{var A=C.exec(this);if(A){if(A[1]){B.push(A[1])}else{if(A[2]){B.push(A[2])}else{if(A[3]){B.push(A[3])}else{if(A[4]){B.push(A[4])}}}}}}while(A);return B};String.prototype.readBracketedList=function(){var B="\\[\\[([^\\]]+)\\]\\]";var A="[^\\s$]+";var E="(?:"+B+")|("+A+")";var D=new RegExp(E,"mg");var F=[];do{var C=D.exec(this);if(C){if(C[1]){F.push(C[1])}else{if(C[2]){F.push(C[2])}}}}while(C);return(F)};String.prototype.trim=function(){return this.replace(/^\s\s*/,"").replace(/\s\s*$/,"")};function fade(F,C){var H;var E=F.cloneNode(true);var G=(C.fade=="in")?1:-1;F.parentNode.replaceChild(E,F);if(C.fade=="in"){H=0;E.style.visibility="visible"}else{H=1}B(E,H);var A=window.setInterval(D,25);function D(){H+=0.05*G;B(E,Math.easeInOut(H));if(((G==1)&&(H>=1))||((G==-1)&&(H<=0))){F.style.visibility=(C.fade=="in")?"visible":"hidden";E.parentNode.replaceChild(F,E);delete E;window.clearInterval(A);if(C.onComplete){C.onComplete()}}}function B(J,I){var K=Math.floor(I*100);J.style.zoom=1;J.style.filter="alpha(opacity="+K+")";J.style.opacity=I}}function scrollWindowTo(E){var D=window.scrollY?window.scrollY:document.body.scrollTop;var G=J(E);var C=Math.abs(D-G);var B=0;var I=(D>G)?-1:1;var F=window.setInterval(H,25);function H(){B+=0.1;window.scrollTo(0,D+I*(C*Math.easeInOut(B)));if(B>=1){window.clearInterval(F)}}function J(N){var O=A(N);var P=O+N.offsetHeight;var K=window.scrollY?window.scrollY:document.body.scrollTop;var L=window.innerHeight?window.innerHeight:document.body.clientHeight;var M=K+L;if(O<K){return O}else{if(P>M){if(N.offsetHeight<L){return(O-(L-N.offsetHeight)+20)}else{return O}}else{return O}}}function A(K){var L=0;while(K.offsetParent){L+=K.offsetTop;K=K.offsetParent}return L}}function History(){this.history=[{passage:null,variables:{}}]}History.prototype.init=function(){if(!this.restore()){if(tale.has("StartPassages")){var B=tale.get("StartPassages").text.readBracketedList();for(var A=0;A<B.length;A++){this.display(B[A],null,"quietly")}}else{this.display("Start",null,"quietly")}}};History.prototype.close=function(B){var A=$("passage"+B.title);if(A){A.parentNode.removeChild(A)}};History.prototype.display=function(E,C,A){var B=C;while(B&&(B.className.indexOf("passage")==-1)){if(B.parentNode.className){B=B.parentNode}else{break}}if(el=$("passage"+E)){scrollWindowTo(el);return }var D=tale.get(E);this.history.unshift({passage:D,variables:clone(this.history[0].variables)});var F=D.render();if(A!="offscreen"){if(B){$("passages").insertBefore(F,B.nextSibling)}else{$("passages").appendChild(F)}if(A!="quietly"){scrollWindowTo(F);fade(F,{fade:"in"})}}if((A=="quietly")||(A=="offscreen")){F.style.visibility="visible"}return F};History.prototype.restart=function(){window.location.hash=""};History.prototype.save=function(C){var A="";for(var B=0;B<this.history.length;B++){if((this.history[B].passage)&&(this.history[B].passage.id)){A+=this.history[B].passage.id.toString(36)+".";if(this.history[B].passage.id==C.id){break}}}return"#"+A.substr(0,A.length-1)};History.prototype.restore=function(){try{if(window.location.hash==""){return false}var A=window.location.hash.replace("#","").split(".");var C=[];for(var B=A.length-1;B>=0;B--){var E=parseInt(A[B],36);if(!tale.has(E)){return false}C.unshift(this.display(E,null,"offscreen"))}$("passages").appendChild(C[0]);return true}catch(D){return false}};History.prototype.rewindTo=function(C){var B=this;fade($("passages"),{fade:"out",onComplete:A});function A(){while(B.history[0].passage.title!=C.title){B.close(B.history.shift().passage)}B.history[0].variables=clone(B.history[1].variables);C.reset();var E=$("passage"+C.title).childNodes;for(var D=0;D<E.length;D++){if(E[D].className=="body"){removeChildren(E[D]);new Wikifier(E[D],C.text)}}fade($("passages"),{fade:"in"})}};var version={major:2,minor:0,revision:0,date:new Date("July 30, 2007"),extensions:{}};var tale,state;var macros={};function main(){tale=new Tale();setPageElement("storyMenu","StoryMenu","");setPageElement("storyTitle","StoryTitle","Untitled Story");setPageElement("storySubtitle","StorySubtitle","");setPageElement("storyAuthor","StoryAuthor","");if(tale.has("StoryTitle")){document.title=tale.get("StoryTitle").text;if(tale.has("StorySubtitle")){document.title+=": "+tale.get("StorySubtitle").text}}for(macro in macros){if(typeof macro.init=="function"){macro.init()}}var styles=tale.lookup("tags","stylesheet");for(var i=0;i<styles.length;i++){addStyle(styles[i].text)}var scripts=tale.lookup("tags","script");for(var i=0;i<scripts.length;i++){try{eval(scripts[i].text)}catch(e){alert("There is a technical problem with this story ("+scripts[i].title+": "+e.message+"). You may be able to continue reading, but all parts of the story may not work properly.")}}state=new History();state.init()}version.extensions.choiceMacro={major:1,minor:2,revision:0};macros.choice={handler:function(A,C,D){var B=document.createElement("a");B.href="javascript:void(0)";B.className="internalLink choice";if(D[1]){B.innerHTML=D[1]}else{B.innerHTML=D[0]}B.onclick=function(){macros.choice.activate(B,D[0])};A.appendChild(B)},activate:function(E,A){var H=E.parentNode;while(H.className.indexOf("body")==-1){H=H.parentNode}var G=H.parentNode.id.substr(7);var B=H.getElementsByTagName("a");var F=[];for(var C=0;C<B.length;C++){if((B[C]!=E)&&(B[C].className.indexOf("choice")!=-1)){var D=document.createElement("span");D.innerHTML=B[C].innerHTML;D.className="disabled";B[C].parentNode.insertBefore(D,B[C].nextSibling);F.push(B[C])}}for(var C=0;C<F.length;C++){F[C].parentNode.removeChild(F[C])}tale.get(G).text="<html>"+H.childNodes[0].innerHTML+"</html>";state.display(A,E)}};version.extensions.displayMacro={major:1,minor:0,revision:0};macros.display={handler:function(A,B,C){new Wikifier(A,tale.get(C[0]).text)}};version.extensions.actionsMacro={major:1,minor:0,revision:0};macros.actions={clicked:new Object(),handler:function(A,F,G){var E=document.createElement("ul");for(var B=0;B<G.length;B++){if(macros.actions.clicked[G[B]]){continue}var D=document.createElement("li");macros.choice.handler(D,"choice",[G[B]]);var C=D.getElementsByTagName("a")[0];C.onclick=function(){macros.actions.clicked[this.innerHTML]=true;macros.choice.activate(this,this.innerHTML)};E.appendChild(D)}A.appendChild(E)}};version.extensions.printMacro={major:1,minor:1,revision:0};macros.print={handler:function(place,macroName,params,parser){try{var output=eval(parser.fullArgs());if(output){new Wikifier(place,output.toString())}}catch(e){throwError(place,"bad expression: "+e.message)}}};version.extensions.setMacro={major:1,minor:1,revision:0};macros.set={handler:function(A,B,C,D){macros.set.run(D.fullArgs())},run:function(expression){try{return eval(Wikifier.parse(expression))}catch(e){throwError(place,"bad expression: "+e.message)}}};version.extensions.ifMacros={major:1,minor:0,revision:0};macros["if"]={handler:function(place,macroName,params,parser){var condition=parser.fullArgs();var srcOffset=parser.source.indexOf(">>",parser.matchStart)+2;var src=parser.source.slice(srcOffset);var endPos=-1;var trueClause="";var falseClause="";for(var i=0,nesting=1,currentClause=true;i<src.length;i++){if(src.substr(i,9)=="<<endif>>"){nesting--;if(nesting==0){endPos=srcOffset+i+9;break}}if((src.substr(i,8)=="<<else>>")&&(nesting==1)){currentClause="false";i+=8}if(src.substr(i,5)=="<<if "){nesting++}if(currentClause==true){trueClause+=src.charAt(i)}else{falseClause+=src.charAt(i)}}try{if(eval(condition)){new Wikifier(place,trueClause.trim())}else{new Wikifier(place,falseClause.trim())}if(endPos!=-1){parser.nextMatch=endPos}else{throwError(place,"can't find matching endif")}}catch(e){throwError(place,"bad condition: "+e.message)}}};macros["else"]=macros.endif={handler:function(){}};version.extensions.rememberMacro={major:1,minor:1,revision:0};macros.remember={handler:function(place,macroName,params,parser){var statement=parser.fullArgs();var expire=new Date();var variable,value;macros.set.run(statement);var variableSigil=Wikifier.parse("$");variableSigil=variableSigil.replace("[","\\[");variableSigil=variableSigil.replace("]","\\]");variable=statement.match(new RegExp(variableSigil+"(\\w+)","i"))[1];value=eval(Wikifier.parse("$"+variable));switch(typeof value){case"string":value='"'+value.replace(/"/g,'\\"')+'"';break;case"number":case"boolean":break;default:throwError(place,"can't remember $"+variable+" ("+(typeof value)+")");return }expire.setYear(expire.getFullYear()+1);document.cookie=macros.remember.prefix+variable+"="+value+"; expires="+expire.toGMTString()},init:function(){if(tale.has("StoryTitle")){macros.remember.prefix=tale.get("StoryTitle").text+"_"}else{macros.remember.prefix="__jonah_"}var cookies=document.cookie.split(";");for(var i=0;i<cookies.length;i++){var bits=cookies[i].split("=");if(bits[0].trim().indexOf(this.prefix)==0){var statement=cookies[i].replace(this.prefix,"$");eval(Wikifier.parse(statement))}}}};version.extensions.SilentlyMacro={major:1,minor:0,revision:0};macros.silently={handler:function(G,E,F,B){var H=insertElement(null,"div");var J=B.source.indexOf(">>",B.matchStart)+2;var A=B.source.slice(J);var D=-1;var C="";for(var I=0;I<A.length;I++){if(A.substr(I,15)=="<<endsilently>>"){D=J+I+15}else{C+=A.charAt(I)}}if(D!=-1){new Wikifier(H,C);B.nextMatch=D}else{throwError(G,"can't find matching endsilently")}delete H}};macros.endsilently={handler:function(){}};function Passage(C,B,A){this.title=C;if(B){this.id=A;this.initialText=this.text=Passage.unescapeLineBreaks(B.firstChild?B.firstChild.nodeValue:"");this.tags=B.getAttribute("tags");if(typeof this.tags=="string"){this.tags=this.tags.readBracketedList()}else{this.tags=[]}}else{this.initialText=this.text="@@This passage does not exist.@@";this.tags=[]}}Passage.prototype.render=function(){var E=insertElement(null,"div","passage"+this.title,"passage");E.style.visibility="hidden";var F=insertElement(E,"div","","title",this.title);var D=insertElement(F,"span","","toolbar");for(var B=0;B<Passage.toolbarItems.length;B++){var C=insertElement(D,"a");insertText(C,Passage.toolbarItems[B].label(E));C.passage=this;if(Passage.toolbarItems[B].href){C.href=Passage.toolbarItems[B].href(E)}else{C.href="javascript:void(0)"}C.title=Passage.toolbarItems[B].tooltip(E);C.onclick=Passage.toolbarItems[B].activate}var A=insertElement(E,"div","","body");new Wikifier(A,this.text);E.onmouseover=function(){E.className+=" selected"};E.onmouseout=function(){E.className=E.className.replace(" selected","")};return E};Passage.prototype.reset=function(){this.text=this.initialText};Passage.toolbarItems=[{label:function(){return"bookmark"},tooltip:function(){return"Bookmark this point in the story"},href:function(A){return(state.save(A))},activate:function(){}},{label:function(){return"rewind to here"},tooltip:function(){},activate:function(){state.rewindTo(this.passage)}}];Passage.unescapeLineBreaks=function(A){if(A&&A!=""){return A.replace(/\\n/mg,"\n").replace(/\\/mg,"\\").replace(/\r/mg,"")}else{return""}};function Tale(){this.passages={};if(document.normalize){document.normalize()}var A=$("storeArea").childNodes;for(var B=0;B<A.length;B++){var C=A[B];if(C.getAttribute&&(title=C.getAttribute("tiddler"))){this.passages[title]=new Passage(title,C,B)}}}Tale.prototype.has=function(A){if(typeof A=="string"){return(this.passages[A]!=null)}else{for(i in this.passages){if(this.passages[i].id==A){return true}}return false}};Tale.prototype.get=function(A){if(typeof A=="string"){return this.passages[A]||new Passage(A)}else{for(i in this.passages){if(this.passages[i].id==A){return this.passages[i]}}}};Tale.prototype.lookup=function(H,G,A){var D=[];for(var C in this.passages){var F=this.passages[C];var E=false;for(var B=0;B<F[H].length;B++){if(F[H][B]==G){D.push(F)}}}if(!A){A="title"}D.sort(function(J,I){if(J[A]==I[A]){return(0)}else{return(J[A]<I[A])?-1:+1}});return D};Tale.prototype.reset=function(){for(i in this.passages){this.passages[i].reset()}};function Wikifier(A,B){this.source=B;this.output=A;this.nextMatch=0;this.assembleFormatterMatches(Wikifier.formatters);this.subWikify(this.output)}Wikifier.prototype.assembleFormatterMatches=function(A){this.formatters=[];var B=[];for(var C=0;C<A.length;C++){B.push("("+A[C].match+")");this.formatters.push(A[C])}this.formatterRegExp=new RegExp(B.join("|"),"mg")};Wikifier.prototype.subWikify=function(C,B){var A=this.output;this.output=C;var F=B?new RegExp("("+B+")","mg"):null;do{this.formatterRegExp.lastIndex=this.nextMatch;if(F){F.lastIndex=this.nextMatch}var G=this.formatterRegExp.exec(this.source);var E=F?F.exec(this.source):null;if(E&&(!G||E.index<=G.index)){if(E.index>this.nextMatch){this.outputText(this.output,this.nextMatch,E.index)}this.matchStart=E.index;this.matchLength=E[1].length;this.matchText=E[1];this.nextMatch=E.index+E[1].length;this.output=A;return }else{if(G){if(G.index>this.nextMatch){this.outputText(this.output,this.nextMatch,G.index)}this.matchStart=G.index;this.matchLength=G[0].length;this.matchText=G[0];this.nextMatch=this.formatterRegExp.lastIndex;var H=-1;for(var D=1;D<G.length;D++){if(G[D]){matchingFormatter=D-1}}if(matchingFormatter!=-1){this.formatters[matchingFormatter].handler(this)}}}}while(E||G);if(this.nextMatch<this.source.length){this.outputText(this.output,this.nextMatch,this.source.length);this.nextMatch=this.source.length}this.output=A};Wikifier.prototype.outputText=function(A,C,B){insertText(A,this.source.substring(C,B))};Wikifier.prototype.fullArgs=function(){var B=this.source.indexOf(" ",this.matchStart);var A=this.source.indexOf(">>",this.matchStart);return Wikifier.parse(this.source.slice(B,A))};Wikifier.parse=function(B){var A=B.replace(/\$/g,"state.history[0].variables.");A=A.replace(/\beq\b/gi," == ");A=A.replace(/\bneq\b/gi," != ");A=A.replace(/\bgt\b/gi," > ");A=A.replace(/\beq\b/gi," == ");A=A.replace(/\bneq\b/gi," != ");A=A.replace(/\bgt\b/gi," > ");A=A.replace(/\bgte\b/gi," >= ");A=A.replace(/\blt\b/gi," < ");A=A.replace(/\blte\b/gi," <= ");A=A.replace(/\band\b/gi," && ");A=A.replace(/\bor\b/gi," || ");A=A.replace(/\bnot\b/gi," ! ");return A};Wikifier.formatHelpers={charFormatHelper:function(A){var B=insertElement(A.output,this.element);A.subWikify(B,this.terminator)},inlineCssHelper:function(F){var H=[];var A="(?:("+Wikifier.textPrimitives.anyLetter+"+)\\(([^\\)\\|\\n]+)(?:\\):))|(?:("+Wikifier.textPrimitives.anyLetter+"+):([^;\\|\\n]+);)";var B=new RegExp(A,"mg");var C=false;do{B.lastIndex=F.nextMatch;var D=B.exec(F.source);var E=D&&D.index==F.nextMatch;if(E){var I,G;C=true;if(D[1]){I=D[1].unDash();G=D[2]}else{I=D[3].unDash();G=D[4]}switch(I){case"bgcolor":I="backgroundColor";break}H.push({style:I,value:G});F.nextMatch=D.index+D[0].length}}while(E);return H},monospacedByLineHelper:function(A){var B=new RegExp(this.lookahead,"mg");B.lastIndex=A.matchStart;var C=B.exec(A.source);if(C&&C.index==A.matchStart){var E=C[1];if(navigator.userAgent.indexOf("msie")!=-1&&navigator.userAgent.indexOf("opera")==-1){E=E.replace(/\n/g,"\r")}var D=insertElement(A.output,"pre",null,null,E);A.nextMatch=C.index+C[0].length}}};Wikifier.formatters=[{name:"table",match:"^\\|(?:[^\\n]*)\\|(?:[fhc]?)$",lookahead:"^\\|([^\\n]*)\\|([fhc]?)$",rowTerminator:"\\|(?:[fhc]?)$\\n?",cellPattern:"(?:\\|([^\\n\\|]*)\\|)|(\\|[fhc]?$\\n?)",cellTerminator:"(?:\\x20*)\\|",rowTypes:{c:"caption",h:"thead","":"tbody",f:"tfoot"},handler:function(H){var J=insertElement(H.output,"table");H.nextMatch=H.matchStart;var C=new RegExp(this.lookahead,"mg");var D=null,A;var K,E;var I=[];var G=0;do{C.lastIndex=H.nextMatch;var F=C.exec(H.source);var B=F&&F.index==H.nextMatch;if(B){A=F[2];if(A!=D){K=insertElement(J,this.rowTypes[A])}D=A;if(D=="c"){if(G==0){K.setAttribute("align","top")}else{K.setAttribute("align","bottom")}H.nextMatch=H.nextMatch+1;H.subWikify(K,this.rowTerminator)}else{E=insertElement(K,"tr");this.rowHandler(H,E,I)}G++}}while(B)},rowHandler:function(G,D,K){var A=0;var I=1;var C=new RegExp(this.cellPattern,"mg");do{C.lastIndex=G.nextMatch;var E=C.exec(G.source);matched=E&&E.index==G.nextMatch;if(matched){if(E[1]=="~"){var J=K[A];if(J){J.rowCount++;J.element.setAttribute("rowSpan",J.rowCount);J.element.setAttribute("rowspan",J.rowCount);J.element.valign="center"}G.nextMatch=E.index+E[0].length-1}else{if(E[1]==">"){I++;G.nextMatch=E.index+E[0].length-1}else{if(E[2]){G.nextMatch=E.index+E[0].length;break}else{var B=false,F=false;G.nextMatch++;var M=Wikifier.formatHelpers.inlineCssHelper(G);while(G.source.substr(G.nextMatch,1)==" "){B=true;G.nextMatch++}var H;if(G.source.substr(G.nextMatch,1)=="!"){H=insertElement(D,"th");G.nextMatch++}else{H=insertElement(D,"td")}K[A]={rowCount:1,element:H};lastColCount=1;lastColElement=H;if(I>1){H.setAttribute("colSpan",I);H.setAttribute("colspan",I);I=1}for(var L=0;L<M.length;L++){H.style[M[L].style]=M[L].value}G.subWikify(H,this.cellTerminator);if(G.matchText.substr(G.matchText.length-2,1)==" "){F=true}if(B&&F){H.align="center"}else{if(B){H.align="right"}else{if(F){H.align="left"}}}G.nextMatch=G.nextMatch-1}}}A++}}while(matched)}},{name:"rule",match:"^----$\\n?",handler:function(A){insertElement(A.output,"hr")}},{name:"emdash",match:"--",handler:function(A){var B=insertElement(A.output,"span");B.innerHTML="&mdash;"}},{name:"heading",match:"^!{1,5}",terminator:"\\n",handler:function(A){var B=insertElement(A.output,"h"+A.matchLength);A.subWikify(B,this.terminator)}},{name:"monospacedByLine",match:"^\\{\\{\\{\\n",lookahead:"^\\{\\{\\{\\n((?:^[^\\n]*\\n)+?)(^\\}\\}\\}$\\n?)",handler:Wikifier.formatHelpers.monospacedByLineHelper},{name:"monospacedByLineForPlugin",match:"^//\\{\\{\\{\\n",lookahead:"^//\\{\\{\\{\\n\\n*((?:^[^\\n]*\\n)+?)(\\n*^//\\}\\}\\}$\\n?)",handler:Wikifier.formatHelpers.monospacedByLineHelper},{name:"wikifyCommentForPlugin",match:"^/\\*\\*\\*\\n",terminator:"^\\*\\*\\*/\\n",handler:function(A){A.subWikify(A.output,this.terminator)}},{name:"quoteByBlock",match:"^<<<\\n",terminator:"^<<<\\n",handler:function(A){var B=insertElement(A.output,"blockquote");A.subWikify(B,this.terminator)}},{name:"quoteByLine",match:"^>+",terminator:"\\n",element:"blockquote",handler:function(C){var E=new RegExp(this.match,"mg");var D=[C.output];var H=0;var B=C.matchLength;var G;do{if(B>H){for(G=H;G<B;G++){D.push(insertElement(D[D.length-1],this.element))}}else{if(B<H){for(G=H;G>B;G--){D.pop()}}}H=B;C.subWikify(D[D.length-1],this.terminator);insertElement(D[D.length-1],"br");E.lastIndex=C.nextMatch;var F=E.exec(C.source);var A=F&&F.index==C.nextMatch;if(A){B=F[0].length;C.nextMatch+=F[0].length}}while(A)}},{name:"list",match:"^(?:(?:\\*+)|(?:#+))",lookahead:"^(?:(\\*+)|(#+))",terminator:"\\n",outerElement:"ul",itemElement:"li",handler:function(I){var B=new RegExp(this.lookahead,"mg");I.nextMatch=I.matchStart;var E=[I.output];var J=null,C;var G=0,D;var K;do{B.lastIndex=I.nextMatch;var F=B.exec(I.source);var A=F&&F.index==I.nextMatch;if(A){if(F[1]){C="ul"}if(F[2]){C="ol"}D=F[0].length;I.nextMatch+=F[0].length;if(D>G){for(K=G;K<D;K++){E.push(insertElement(E[E.length-1],C))}}else{if(D<G){for(K=G;K>D;K--){E.pop()}}else{if(D==G&&C!=J){E.pop();E.push(insertElement(E[E.length-1],C))}}}G=D;J=C;var H=insertElement(E[E.length-1],"li");I.subWikify(H,this.terminator)}}while(A)}},{name:"prettyLink",match:"\\[\\[",lookahead:"\\[\\[([^\\|\\]]*?)(?:(\\]\\])|(\\|(.*?)\\]\\]))",terminator:"\\|",handler:function(A){var B=new RegExp(this.lookahead,"mg");B.lastIndex=A.matchStart;var C=B.exec(A.source);if(C&&C.index==A.matchStart&&C[2]){var D=Wikifier.createInternalLink(A.output,C[1]);A.outputText(D,A.nextMatch,A.nextMatch+C[1].length);A.nextMatch+=C[1].length+2}else{if(C&&C.index==A.matchStart&&C[3]){var E;if(tale.has(C[4])){E=Wikifier.createInternalLink(A.output,C[4])}else{E=Wikifier.createExternalLink(A.output,C[4])}A.outputText(E,A.nextMatch,A.nextMatch+C[1].length);A.nextMatch=C.index+C[0].length}}}},{name:"urlLink",match:"(?:http|https|mailto|ftp):[^\\s'\"]+(?:/|\\b)",handler:function(A){var B=Wikifier.createExternalLink(A.output,A.matchText);A.outputText(B,A.matchStart,A.nextMatch)}},{name:"image",match:"\\[(?:[<]{0,1})(?:[>]{0,1})[Ii][Mm][Gg]\\[",lookahead:"\\[([<]{0,1})([>]{0,1})[Ii][Mm][Gg]\\[(?:([^\\|\\]]+)\\|)?([^\\[\\]\\|]+)\\](?:\\[([^\\]]*)\\]?)?(\\])",handler:function(A){var C=new RegExp(this.lookahead,"mg");C.lastIndex=A.matchStart;var D=C.exec(A.source);if(D&&D.index==A.matchStart){var E=A.output;if(D[5]){if(tale.has(D[5])){E=Wikifier.createInternalLink(A.output,D[5])}else{E=Wikifier.createExternalLink(A.output,D[5])}}var B=insertElement(E,"img");if(D[1]){B.align="left"}else{if(D[2]){B.align="right"}}if(D[3]){B.title=D[3]}B.src=D[4];A.nextMatch=D.index+D[0].length}}},{name:"macro",match:"<<",lookahead:"<<([^>\\s]+)(?:\\s*)([^>]*)>>",handler:function(A){var B=new RegExp(this.lookahead,"mg");B.lastIndex=A.matchStart;var C=B.exec(A.source);if(C&&C.index==A.matchStart&&C[1]){var F=C[2].readMacroParams();A.nextMatch=C.index+C[0].length;try{var D=macros[C[1]];if(D&&D.handler){D.handler(A.output,C[1],F,A)}else{insertElement(A.output,"span",null,"marked","macro not found: "+C[1])}}catch(E){throwError(A.output,"Error executing macro "+C[1]+": "+E.toString())}}}},{name:"html",match:"<[Hh][Tt][Mm][Ll]>",lookahead:"<[Hh][Tt][Mm][Ll]>((?:.|\\n)*?)</[Hh][Tt][Mm][Ll]>",handler:function(A){var B=new RegExp(this.lookahead,"mg");B.lastIndex=A.matchStart;var C=B.exec(A.source);if(C&&C.index==A.matchStart){var D=insertElement(A.output,"span");D.innerHTML=C[1];A.nextMatch=C.index+C[0].length}}},{name:"commentByBlock",match:"/%",lookahead:"/%((?:.|\\n)*?)%/",handler:function(A){var B=new RegExp(this.lookahead,"mg");B.lastIndex=A.matchStart;var C=B.exec(A.source);if(C&&C.index==A.matchStart){A.nextMatch=C.index+C[0].length}}},{name:"boldByChar",match:"''",terminator:"''",element:"strong",handler:Wikifier.formatHelpers.charFormatHelper},{name:"strikeByChar",match:"==",terminator:"==",element:"strike",handler:Wikifier.formatHelpers.charFormatHelper},{name:"underlineByChar",match:"__",terminator:"__",element:"u",handler:Wikifier.formatHelpers.charFormatHelper},{name:"italicByChar",match:"//",terminator:"//",element:"em",handler:Wikifier.formatHelpers.charFormatHelper},{name:"subscriptByChar",match:"~~",terminator:"~~",element:"sub",handler:Wikifier.formatHelpers.charFormatHelper},{name:"superscriptByChar",match:"\\^\\^",terminator:"\\^\\^",element:"sup",handler:Wikifier.formatHelpers.charFormatHelper},{name:"monospacedByChar",match:"\\{\\{\\{",lookahead:"\\{\\{\\{((?:.|\\n)*?)\\}\\}\\}",handler:function(A){var B=new RegExp(this.lookahead,"mg");B.lastIndex=A.matchStart;var C=B.exec(A.source);if(C&&C.index==A.matchStart){var D=insertElement(A.output,"code",null,null,C[1]);A.nextMatch=C.index+C[0].length}}},{name:"styleByChar",match:"@@",terminator:"@@",lookahead:"(?:([^\\(@]+)\\(([^\\)]+)(?:\\):))|(?:([^:@]+):([^;]+);)",handler:function(A){var D=insertElement(A.output,"span",null,null,null);var C=Wikifier.formatHelpers.inlineCssHelper(A);if(C.length==0){D.className="marked"}else{for(var B=0;B<C.length;B++){D.style[C[B].style]=C[B].value}}A.subWikify(D,this.terminator)}},{name:"lineBreak",match:"\\n",handler:function(A){insertElement(A.output,"br")}}];Wikifier.textPrimitives={anyDigit:"[0-9]",anyNumberChar:"[0-9\\.E]",urlPattern:"(?:http|https|mailto|ftp):[^\\s'\"]+(?:/|\\b)"};Wikifier.createInternalLink=function(A,C){var B=insertElement(A,"a",C);B.href="javascript:void(0)";if(tale.has(C)){B.className="internalLink"}else{B.className="brokenLink"}B.onclick=function(){state.display(C,B)};if(A){A.appendChild(B)}return B};Wikifier.createExternalLink=function(A,B){var C=insertElement(A,"a");C.href=B;C.className="externalLink";C.target="_blank";if(A){A.appendChild(C)}return C};if(!((new RegExp("[\u0150\u0170]","g")).test("\u0150"))){Wikifier.textPrimitives.upperLetter="[A-Z\u00c0-\u00de]";Wikifier.textPrimitives.lowerLetter="[a-z\u00df-\u00ff_0-9\\-]";Wikifier.textPrimitives.anyLetter="[A-Za-z\u00c0-\u00de\u00df-\u00ff_0-9\\-]"}else{Wikifier.textPrimitives.upperLetter="[A-Z\u00c0-\u00de\u0150\u0170]";Wikifier.textPrimitives.lowerLetter="[a-z\u00df-\u00ff_0-9\\-\u0151\u0171]";Wikifier.textPrimitives.anyLetter="[A-Za-z\u00c0-\u00de\u00df-\u00ff_0-9\\-\u0150\u0170\u0151\u0171]"};
-</script>
-<style type="text/css">
-body{background-color:#eee;color:#303030;font-family:Verdana,sans-serif;font-size:62.5%;margin:0;text-align:center;}h1,h2,h3{color:#000;font-weight:normal;text-align:center;}h1{font-size:4em;line-height:1.2em;margin-bottom:0;margin-top:1em;}h2{font-size:1.4em;font-style:italic;margin-top:1em;}h3{font-size:1.3em;margin-bottom:5em;margin-top:.8em;}.passage{background-color:#eee;font-size:1.3em;line-height:175%;margin-bottom:2em;}ul li{list-style-type:square;}.toolbar a{color:#999;text-decoration:none;}.toolbar a:hover{text-decoration:underline;color:#8ea6ff;}a.internalLink,a.externalLink{color:#4d6ad8;font-weight:bold;text-decoration:none;}a.internalLink:hover,a.externalLink:hover{text-decoration:underline;color:#8ea6ff;}a.brokenLink{background-color:red;color:black;}.title{color:#000;font:bold 1.4em Verdana,sans-serif;line-height:200%;}#footer{font-size:1.1em;font-style:italic;margin-top:5em;text-align:center;}#footer a.externalLink{border-bottom:1px solid #464646;color:#464646;font-weight:normal;}.marked{background-color:pink;margin-right:12px;}.disabled{color:#aaa;font-style:italic;}#floater{_position:absolute;_width:100px;background-color:#fff;border-left:1px solid #ddd;border-bottom:2px solid #aaa;font-size:1.1em;padding:0 20px;position:fixed;right:0;text-align:center;top:0;line-height:100%;}#floater a:link,#floater a:visited{color:#999;font-weight:bold;text-decoration:none;}#floater a:hover{color:#8ea6ff;text-decoration:underline;}#content1{margin:0 20em 1em 20em;text-align:left;}.toolbar{padding:0;visibility:hidden;font-size:.5em;}.toolbar a{margin-left:12px;}.selected .toolbar{visibility:visible;}.passage ul{margin-left:.5em;padding-left:1.5em;}.passage ol{margin-left:.5em;padding-left:1.5em;}.passage table{border-collapse:collapse;font-size:100%;margin:.8em 1.0em;}.passage th,.passage td,.passage tr,.passage caption{padding:3px;}.passage hr{height:1px;}#saveTest,.footer{display:none;}#messageArea{background-color:pink;display:none;font-weight:bold;text-align:center;}#storeArea,#copyright{display:none;}
-</style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Melville</title>
+  <meta name="viewport" content="width=device-width">
+  <style>
+/*! normalize.css v2.0.1 | MIT License | git.io/normalize */
 
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/*
+ * Corrects `block` display not defined in IE 8/9.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/*
+ * Corrects `inline-block` display not defined in IE 8/9.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+}
+
+/*
+ * Prevents modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/*
+ * Addresses styling for `hidden` attribute not present in IE 8/9.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/*
+ * 1. Sets default font family to sans-serif.
+ * 2. Prevents iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    font-family: sans-serif; /* 1 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+    -ms-text-size-adjust: 100%; /* 2 */
+}
+
+/*
+ * Removes default margin.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/*
+ * Addresses `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/*
+ * Improves readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/*
+ * Addresses `h1` font sizes within `section` and `article` in Firefox 4+,
+ * Safari 5, and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+}
+
+/*
+ * Addresses styling not present in IE 8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/*
+ * Addresses style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+/*
+ * Addresses styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/*
+ * Addresses styling not present in IE 8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+
+/*
+ * Corrects font family set oddly in Safari 5 and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    font-size: 1em;
+}
+
+/*
+ * Improves readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/*
+ * Sets consistent quote types.
+ */
+
+q {
+    quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+/*
+ * Addresses inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/*
+ * Prevents `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/*
+ * Removes border when inside `a` element in IE 8/9.
+ */
+
+img {
+    border: 0;
+}
+
+/*
+ * Corrects overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/*
+ * Addresses margin not present in IE 8/9 and Safari 5.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/*
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/*
+ * 1. Corrects color not being inherited in IE 8/9.
+ * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0; /* 2 */
+}
+
+/*
+ * 1. Corrects font family not being inherited in all browsers.
+ * 2. Corrects font size not being inherited in all browsers.
+ * 3. Addresses margins set differently in Firefox 4+, Safari 5, and Chrome
+ */
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit; /* 1 */
+    font-size: 100%; /* 2 */
+    margin: 0; /* 3 */
+}
+
+/*
+ * Addresses Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/*
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Corrects inability to style clickable `input` types in iOS.
+ * 3. Improves usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+}
+
+/*
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+input[disabled] {
+    cursor: default;
+}
+
+/*
+ * 1. Addresses box sizing set to `content-box` in IE 8/9.
+ * 2. Removes excess padding in IE 8/9.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+}
+
+/*
+ * 1. Addresses `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Addresses `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/*
+ * Removes inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/*
+ * Removes inner padding and border in Firefox 4+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/*
+ * 1. Removes default vertical scrollbar in IE 8/9.
+ * 2. Improves readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/*
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/*! melville */
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.625;
+  font-family: cambria, georgia, sans-serif;
+  color: #444;
+}
+
+::-moz-selection { 
+  background: #fde5f3;
+  text-shadow: none;
+}
+
+::selection {
+  background: #fde5f3;
+  text-shadow: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b,
+strong,
+.title {
+  font-weight: normal;
+  color: #000; /* georgia bold looks awful, use dark grey for text and black for bolding */
+}
+
+h1 {
+  margin: 0;
+  font-size: 35px;
+  line-height: 1.4857142; /* 35px x 1.4857142 = 52px */
+}
+
+h2,
+.title {
+  margin: 0;
+  font-size: 23px;
+  line-height: 1.5; /* 23px x 1.5 = 39px */
+}
+
+h3 {
+  margin: 0;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.368421; /* 19px x 1.368421 = 26px */
+}
+
+ul {
+  list-style-type: square;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: #118feb;
+  text-decoration: none;
+  -webkit-transition: color 250ms ease-in-out;
+     -moz-transition: color 250ms ease-in-out;
+      -ms-transition: color 250ms ease-in-out;
+       -o-transition: color 250ms ease-in-out;
+          transition: color 250ms ease-in-out;
+}
+
+a:hover {
+  color: #0b63a3;
+}
+
+.brokenLink,
+.brokenLink:hover {
+  color: #c33;
+}
+
+#passages,
+.passage {
+ margin: 26px 0;
+}
+
+#footer {
+  margin: 0;
+  padding: 26px 0 0;
+  font-size: 13px;
+  line-height: 1.25;
+  color: #888;
+}
+
+.marked {
+  margin-right: 1em;
+  background-color: hotpink;
+}
+
+.disabled {
+  color: #888;
+}
+
+#floater {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  border-left: 1px solid #dedede;
+  border-bottom: 1px solid #dedede;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.25;
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  box-shadow:         0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+#floater p {
+  margin: 8px 0;
+}
+
+#content1 {
+  width: 650px;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 26px 0;
+}
+
+.toolbar {
+  visibility: hidden;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.toolbar a {
+  margin-left: 1em;
+  font-weight: normal;
+}
+
+.selected .toolbar {
+  visibility: visible;
+}
+
+.passage ul,
+.passage ol {
+  margin: 13px 0 26px;
+  padding: 0 0 0 1.625em;
+}
+
+.passage table {
+  margin: 13px;
+}
+
+.passage th,
+.passage td,
+.passage tr,
+.passage caption {
+  padding: 0.2em;
+}
+
+.passage hr {
+  display: block; 
+  height: 1px; 
+  border: 0; 
+  border-top: 1px solid #dedede;
+  margin: 13px 0 12px;
+  padding: 0;
+}
+
+.footer,
+#saveTest,
+#storeArea,
+#copyright {
+  display: none;
+}
+
+#messageArea {
+  display: none;
+  text-align: center;
+  background-color: hotpink;
+}
+
+  </style>
+  <script>(function(){
+function $(a){return"use strict",typeof a=="string"?document.getElementById(a):a}function clone(a){"use strict";var b={};for(var c in a)a.hasOwnProperty(c)&&(b[c]=a[c]);return b}function insertText(a,b){return"use strict",a.appendChild(document.createTextNode(b))}function insertElement(a,b,c,d,e){"use strict";var f=document.createElement(b);return c&&(f.id=c),d&&(f.className=d),e&&insertText(f,e),a&&a.appendChild(f),f}function removeChildren(a){"use strict";while(a.hasChildNodes())a.removeChild(a.firstChild)}function addStyle(a){"use strict";var b;document.createStyleSheet?document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeEnd","&nbsp;<style>"+a+"</style>"):(b=document.createElement("style"),b.type="text/css",b.appendChild(document.createTextNode(a)),document.getElementsByTagName("head")[0].appendChild(b))}function Wikifier(a,b){"use strict",this.source=b,this.output=a,this.nextMatch=0,this.assembleFormatterMatches(Wikifier.formatters),this.subWikify(this.output)}function throwError(a,b){"use strict",new Wikifier(a,"'' @@ "+b+" @@ ''")}function fade(a,b){function g(){c+=.05*e,h(d,Math.easeInOut(c));if(e===1&&c>=1||e===-1&&c<=0)console.log("swapping fader proxy out"),a.style.visibility=b.fade==="in"?"visible":"hidden",d.parentNode.replaceChild(a,d),window.clearInterval(f),b.onComplete&&b.onComplete()}function h(a,b){var c=Math.floor(b*100);a.style.zoom=1,a.style.filter="alpha(opacity="+c+")",a.style.opacity=b}"use strict";var c,d=a.cloneNode(!0),e=b.fade==="in"?1:-1,f;a.parentNode.replaceChild(d,a),b.fade==="in"?(c=0,d.style.visibility="visible"):c=1,h(d,c),f=window.setInterval(g,25)}function scrollWindowTo(a){function h(){c+=.1,window.scrollTo(0,b+f*e*Math.easeInOut(c)),c>=1&&window.clearInterval(g)}function i(a){var b=j(a),c=b+a.offsetHeight,d=window.scrollY?window.scrollY:document.body.scrollTop,e=window.innerHeight?window.innerHeight:document.body.clientHeight,f=d+e;return b<d?b:c>f?a.offsetHeight<e?b-(e-a.offsetHeight)+20:b:b}function j(a){var b=0;while(a.offsetParent)b+=a.offsetTop,a=a.offsetParent;return b}"use strict";var b=window.scrollY?window.scrollY:document.body.scrollTop,c=0,d,e,f,g;d=i(a),e=Math.abs(b-d),f=b>d?-1:1,g=window.setInterval(h,25)}function History(){"use strict",this.history=[{passage:null,variables:{}}]}function Passage(a,b,c){"use strict",this.title=a,b?(this.id=c,this.initialText=this.text=Passage.unescapeLineBreaks(b.firstChild?b.firstChild.nodeValue:""),this.tags=b.getAttribute("tags"),typeof this.tags=="string"?this.tags=this.tags.readBracketedList():this.tags=[]):(this.initialText=this.text="@@This passage does not exist.@@",this.tags=[])}function Tale(){"use strict";var a,b,c;this.passages={},document.normalize&&document.normalize(),a=$("storeArea").childNodes;for(var d=0;d<a.length;d++)c=a[d],c.getAttribute&&(b=c.getAttribute("tiddler")),b&&(this.passages[b]=new Passage(b,c,d))}function setPageElement(a,b,c){"use strict";var d=$(a);d&&(removeChildren(d),tale.has(b)?new Wikifier(d,tale.get(b).text):new Wikifier(d,c))}var version={major:2,minor:0,revision:0,date:new Date("July 30, 2007"),extensions:{}},tale,state,macros={};Math.easeInOut=function(a){return"use strict",1-(Math.cos(a*Math.PI)+1)/2},String.prototype.readMacroParams=function(){"use strict";var a=new RegExp("(?:\\s*)(?:(?:\"([^\"]*)\")|(?:'([^']*)')|(?:\\[\\[([^\\]]*)\\]\\])|([^\"'\\s]\\S*))","mg"),b=[],c;do c=a.exec(this),c&&(c[1]?b.push(c[1]):c[2]?b.push(c[2]):c[3]?b.push(c[3]):c[4]&&b.push(c[4]));while(c);return b},String.prototype.readBracketedList=function(){"use strict";var a="\\[\\[([^\\]]+)\\]\\]",b="[^\\s$]+",c="(?:"+a+")|("+b+")",d=new RegExp(c,"mg"),e=[],f;do f=d.exec(this),f&&(f[1]?e.push(f[1]):f[2]&&e.push(f[2]));while(f);return e},String.prototype.trim=function(){return"use strict",this.replace(/^\s\s*/,"").replace(/\s\s*$/,"")},Wikifier.prototype.assembleFormatterMatches=function(a){"use strict";var b=[];this.formatters=[];for(var c=0;c<a.length;c++)b.push("("+a[c].match+")"),this.formatters.push(a[c]);this.formatterRegExp=new RegExp(b.join("|"),"mg")},Wikifier.prototype.subWikify=function(a,b){"use strict";var c,d,e,f,g;c=this.output,this.output=a,d=b?new RegExp("("+b+")","mg"):null;do{this.formatterRegExp.lastIndex=this.nextMatch,d&&(d.lastIndex=this.nextMatch),e=this.formatterRegExp.exec(this.source),f=d?d.exec(this.source):null;if(f&&(!e||f.index<=e.index)){f.index>this.nextMatch&&this.outputText(this.output,this.nextMatch,f.index),this.matchStart=f.index,this.matchLength=f[1].length,this.matchText=f[1],this.nextMatch=f.index+f[1].length,this.output=c;return}if(e){e.index>this.nextMatch&&this.outputText(this.output,this.nextMatch,e.index),this.matchStart=e.index,this.matchLength=e[0].length,this.matchText=e[0],this.nextMatch=this.formatterRegExp.lastIndex,g=-1;for(var h=1;h<e.length;h++)e[h]&&(g=h-1);g!==-1&&this.formatters[g].handler(this)}}while(f||e);this.nextMatch<this.source.length&&(this.outputText(this.output,this.nextMatch,this.source.length),this.nextMatch=this.source.length),this.output=c},Wikifier.prototype.outputText=function(a,b,c){"use strict",insertText(a,this.source.substring(b,c))},Wikifier.prototype.fullArgs=function(){"use strict";var a=this.source.indexOf(" ",this.matchStart),b=this.source.indexOf(">>",this.matchStart);return Wikifier.parse(this.source.slice(a,b))},Wikifier.parse=function(a){"use strict";var b=a.replace(/\$/g,"state.history[0].variables.");return b=b.replace(/\beq\b/gi," == "),b=b.replace(/\bneq\b/gi," != "),b=b.replace(/\bgt\b/gi," > "),b=b.replace(/\beq\b/gi," == "),b=b.replace(/\bneq\b/gi," != "),b=b.replace(/\bgt\b/gi," > "),b=b.replace(/\bgte\b/gi," >= "),b=b.replace(/\blt\b/gi," < "),b=b.replace(/\blte\b/gi," <= "),b=b.replace(/\band\b/gi," && "),b=b.replace(/\bor\b/gi," || "),b=b.replace(/\bnot\b/gi," ! "),b},Wikifier.formatHelpers={charFormatHelper:function(a){"use strict";var b=insertElement(a.output,this.element);a.subWikify(b,this.terminator)},inlineCssHelper:function(a){"use strict";var b=[],c="(?:("+Wikifier.textPrimitives.anyLetter+"+)\\(([^\\)\\|\\n]+)(?:\\):))|(?:("+Wikifier.textPrimitives.anyLetter+"+):([^;\\|\\n]+);)",d=new RegExp(c,"mg"),e=!1,f,g;do{d.lastIndex=a.nextMatch,f=d.exec(a.source),g=f&&f.index===a.nextMatch;if(g){var h,i;e=!0,f[1]?(h=f[1].unDash(),i=f[2]):(h=f[3].unDash(),i=f[4]),h==="bgcolor"&&(h="backgroundColor"),b.push({style:h,value:i}),a.nextMatch=f.index+f[0].length}}while(g);return b},monospacedByLineHelper:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c,d;b.lastIndex=a.matchStart,c=b.exec(a.source),c&&c.index===a.matchStart&&(d=c[1],navigator.userAgent.indexOf("msie")!==-1&&navigator.userAgent.indexOf("opera")===-1&&(d=d.replace(/\n/g,"\r")),insertElement(a.output,"pre",null,null,d),a.nextMatch=c.index+c[0].length)}},Wikifier.formatters=[{name:"table",match:"^\\|(?:[^\\n]*)\\|(?:[fhc]?)$",lookahead:"^\\|([^\\n]*)\\|([fhc]?)$",rowTerminator:"\\|(?:[fhc]?)$\\n?",cellPattern:"(?:\\|([^\\n\\|]*)\\|)|(\\|[fhc]?$\\n?)",cellTerminator:"(?:\\x20*)\\|",rowTypes:{c:"caption",h:"thead","":"tbody",f:"tfoot"},handler:function(a){"use strict";var b=insertElement(a.output,"table"),c=new RegExp(this.lookahead,"mg"),d=null,e,f,g,h=[],i=0,j,k;a.nextMatch=a.matchStart;do c.lastIndex=a.nextMatch,j=c.exec(a.source),k=j&&j.index===a.nextMatch,k&&(e=j[2],e!==d&&(f=insertElement(b,this.rowTypes[e])),d=e,d==="c"?(i===0?f.setAttribute("align","top"):f.setAttribute("align","bottom"),a.nextMatch=a.nextMatch+1,a.subWikify(f,this.rowTerminator)):(g=insertElement(f,"tr"),this.rowHandler(a,g,h)),i++);while(k)},rowHandler:function(a,b,c){"use strict";var d=0,e=1,f=new RegExp(this.cellPattern,"mg"),g,h,i,j,k,l,m,n,o;do{f.lastIndex=a.nextMatch,g=f.exec(a.source),h=g&&g.index===a.nextMatch;if(h){if(g[1]==="~")i=c[d],i&&(i.rowCount++,i.element.setAttribute("rowSpan",i.rowCount),i.element.setAttribute("rowspan",i.rowCount),i.element.valign="center"),a.nextMatch=g.index+g[0].length-1;else if(g[1]===">")e++,a.nextMatch=g.index+g[0].length-1;else{if(g[2]){a.nextMatch=g.index+g[0].length;break}j=!1,k=!1,a.nextMatch++,l=Wikifier.formatHelpers.inlineCssHelper(a);while(a.source.substr(a.nextMatch,1)===" ")j=!0,a.nextMatch++;a.source.substr(a.nextMatch,1)==="!"?(m=insertElement(b,"th"),a.nextMatch++):m=insertElement(b,"td"),c[d]={rowCount:1,element:m},n=1,o=m,e>1&&(m.setAttribute("colSpan",e),m.setAttribute("colspan",e),e=1);for(var p=0;p<l.length;p++)m.style[l[p].style]=l[p].value;a.subWikify(m,this.cellTerminator),a.matchText.substr(a.matchText.length-2,1)===" "&&(k=!0),j&&k?m.align="center":j?m.align="right":k&&(m.align="left"),a.nextMatch=a.nextMatch-1}d++}}while(h)}},{name:"rule",match:"^----$\\n?",handler:function(a){"use strict",insertElement(a.output,"hr")}},{name:"emdash",match:"--",handler:function(a){"use strict";var b=insertElement(a.output,"span");b.innerHTML="&mdash;"}},{name:"heading",match:"^!{1,5}",terminator:"\\n",handler:function(a){"use strict";var b=insertElement(a.output,"h"+a.matchLength);a.subWikify(b,this.terminator)}},{name:"monospacedByLine",match:"^\\{\\{\\{\\n",lookahead:"^\\{\\{\\{\\n((?:^[^\\n]*\\n)+?)(^\\}\\}\\}$\\n?)",handler:Wikifier.formatHelpers.monospacedByLineHelper},{name:"monospacedByLineForPlugin",match:"^//\\{\\{\\{\\n",lookahead:"^//\\{\\{\\{\\n\\n*((?:^[^\\n]*\\n)+?)(\\n*^//\\}\\}\\}$\\n?)",handler:Wikifier.formatHelpers.monospacedByLineHelper},{name:"wikifyCommentForPlugin",match:"^/\\*\\*\\*\\n",terminator:"^\\*\\*\\*/\\n",handler:function(a){"use strict",a.subWikify(a.output,this.terminator)}},{name:"quoteByBlock",match:"^<<<\\n",terminator:"^<<<\\n",handler:function(a){"use strict";var b=insertElement(a.output,"blockquote");a.subWikify(b,this.terminator)}},{name:"quoteByLine",match:"^>+",terminator:"\\n",element:"blockquote",handler:function(a){"use strict";var b=new RegExp(this.match,"mg"),c=[a.output],d=0,e=a.matchLength,f,g,h;do{if(e>d)for(f=d;f<e;f++)c.push(insertElement(c[c.length-1],this.element));else if(e<d)for(f=d;f>e;f--)c.pop();d=e,a.subWikify(c[c.length-1],this.terminator),insertElement(c[c.length-1],"br"),b.lastIndex=a.nextMatch,g=b.exec(a.source),h=g&&g.index===a.nextMatch,h&&(e=g[0].length,a.nextMatch+=g[0].length)}while(h)}},{name:"list",match:"^(?:(?:\\*+)|(?:#+))",lookahead:"^(?:(\\*+)|(#+))",terminator:"\\n",outerElement:"ul",itemElement:"li",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c=null,d=0,e,f,g,h,i,j,k;a.nextMatch=a.matchStart,h=[a.output];do{b.lastIndex=a.nextMatch,i=b.exec(a.source),j=i&&i.index===a.nextMatch;if(j){i[1]&&(e="ul"),i[2]&&(e="ol"),f=i[0].length,a.nextMatch+=i[0].length;if(f>d)for(g=d;g<f;g++)h.push(insertElement(h[h.length-1],e));else if(f<d)for(g=d;g>f;g--)h.pop();else f===d&&e!==c&&(h.pop(),h.push(insertElement(h[h.length-1],e)));d=f,c=e,k=insertElement(h[h.length-1],"li"),a.subWikify(k,this.terminator)}}while(j)}},{name:"prettyLink",match:"\\[\\[",lookahead:"\\[\\[([^\\|\\]]*?)(?:(\\]\\])|(\\|(.*?)\\]\\]))",terminator:"\\|",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c,d,e;b.lastIndex=a.matchStart,c=b.exec(a.source),c&&c.index===a.matchStart&&c[2]?(d=Wikifier.createInternalLink(a.output,c[1]),a.outputText(d,a.nextMatch,a.nextMatch+c[1].length),a.nextMatch+=c[1].length+2):c&&c.index===a.matchStart&&c[3]&&(tale.has(c[4])?e=Wikifier.createInternalLink(a.output,c[4]):e=Wikifier.createExternalLink(a.output,c[4]),a.outputText(e,a.nextMatch,a.nextMatch+c[1].length),a.nextMatch=c.index+c[0].length)}},{name:"urlLink",match:"(?:http|https|mailto|ftp):[^\\s'\"]+(?:/|\\b)",handler:function(a){"use strict";var b=Wikifier.createExternalLink(a.output,a.matchText);a.outputText(b,a.matchStart,a.nextMatch)}},{name:"image",match:"\\[(?:[<]{0,1})(?:[>]{0,1})[Ii][Mm][Gg]\\[",lookahead:"\\[([<]{0,1})([>]{0,1})[Ii][Mm][Gg]\\[(?:([^\\|\\]]+)\\|)?([^\\[\\]\\|]+)\\](?:\\[([^\\]]*)\\]?)?(\\])",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c,d,e;b.lastIndex=a.matchStart,c=b.exec(a.source),c&&c.index===a.matchStart&&(d=a.output,c[5]&&(tale.has(c[5])?d=Wikifier.createInternalLink(a.output,c[5]):d=Wikifier.createExternalLink(a.output,c[5])),e=insertElement(d,"img"),c[1]?e.align="left":c[2]&&(e.align="right"),c[3]&&(e.title=c[3]),e.src=c[4],a.nextMatch=c.index+c[0].length)}},{name:"macro",match:"<<",lookahead:"<<([^>\\s]+)(?:\\s*)([^>]*)>>",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c,d,e;b.lastIndex=a.matchStart,c=b.exec(a.source);if(c&&c.index===a.matchStart&&c[1]){d=c[2].readMacroParams(),a.nextMatch=c.index+c[0].length;try{e=macros[c[1]],e&&e.handler?e.handler(a.output,c[1],d,a):insertElement(a.output,"span",null,"marked","macro not found: "+c[1])}catch(f){throwError(a.output,"Error executing macro "+c[1]+": "+f.toString())}}}},{name:"html",match:"<[Hh][Tt][Mm][Ll]>",lookahead:"<[Hh][Tt][Mm][Ll]>((?:.|\\n)*?)</[Hh][Tt][Mm][Ll]>",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c,d;b.lastIndex=a.matchStart,c=b.exec(a.source),c&&c.index===a.matchStart&&(d=insertElement(a.output,"span"),d.innerHTML=c[1],a.nextMatch=c.index+c[0].length)}},{name:"commentByBlock",match:"/%",lookahead:"/%((?:.|\\n)*?)%/",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c;b.lastIndex=a.matchStart,c=b.exec(a.source),c&&c.index===a.matchStart&&(a.nextMatch=c.index+c[0].length)}},{name:"boldByChar",match:"''",terminator:"''",element:"strong",handler:Wikifier.formatHelpers.charFormatHelper},{name:"strikeByChar",match:"==",terminator:"==",element:"strike",handler:Wikifier.formatHelpers.charFormatHelper},{name:"underlineByChar",match:"__",terminator:"__",element:"u",handler:Wikifier.formatHelpers.charFormatHelper},{name:"italicByChar",match:"//",terminator:"//",element:"em",handler:Wikifier.formatHelpers.charFormatHelper},{name:"subscriptByChar",match:"~~",terminator:"~~",element:"sub",handler:Wikifier.formatHelpers.charFormatHelper},{name:"superscriptByChar",match:"\\^\\^",terminator:"\\^\\^",element:"sup",handler:Wikifier.formatHelpers.charFormatHelper},{name:"monospacedByChar",match:"\\{\\{\\{",lookahead:"\\{\\{\\{((?:.|\\n)*?)\\}\\}\\}",handler:function(a){"use strict";var b=new RegExp(this.lookahead,"mg"),c,d;b.lastIndex=a.matchStart,c=b.exec(a.source),c&&c.index===a.matchStart&&(d=insertElement(a.output,"code",null,null,c[1]),a.nextMatch=c.index+c[0].length)}},{name:"styleByChar",match:"@@",terminator:"@@",lookahead:"(?:([^\\(@]+)\\(([^\\)]+)(?:\\):))|(?:([^:@]+):([^;]+);)",handler:function(a){"use strict";var b=insertElement(a.output,"span",null,null,null),c=Wikifier.formatHelpers.inlineCssHelper(a);if(c.length===0)b.className="marked";else for(var d=0;d<c.length;d++)b.style[c[d].style]=c[d].value;a.subWikify(b,this.terminator)}},{name:"lineBreak",match:"\\n",handler:function(a){"use strict",insertElement(a.output,"br")}}],Wikifier.textPrimitives={anyDigit:"[0-9]",anyNumberChar:"[0-9\\.E]",urlPattern:"(?:http|https|mailto|ftp):[^\\s'\"]+(?:/|\\b)"},Wikifier.createInternalLink=function(a,b){"use strict";var c=insertElement(a,"a",b);return c.href="#_",tale.has(b)?c.className="internalLink":c.className="brokenLink",c.onclick=function(){return state.display(b,c),!1},a&&a.appendChild(c),c},Wikifier.createExternalLink=function(a,b){"use strict";var c=insertElement(a,"a");return c.href=b,c.className="externalLink",c.target="_blank",a&&a.appendChild(c),c},(new RegExp("[\u0150\u0170]","g")).test("\u0150")?(Wikifier.textPrimitives.upperLetter="[A-Z\u00c0-\u00de\u0150\u0170]",Wikifier.textPrimitives.lowerLetter="[a-z\u00df-\u00ff_0-9\\-\u0151\u0171]",Wikifier.textPrimitives.anyLetter="[A-Za-z\u00c0-\u00de\u00df-\u00ff_0-9\\-\u0150\u0170\u0151\u0171]"):(Wikifier.textPrimitives.upperLetter="[A-Z\u00c0-\u00de]",Wikifier.textPrimitives.lowerLetter="[a-z\u00df-\u00ff_0-9\\-]",Wikifier.textPrimitives.anyLetter="[A-Za-z\u00c0-\u00de\u00df-\u00ff_0-9\\-]"),History.prototype.init=function(){"use strict";var a;if(!this.restore())if(tale.has("StartPassages")){console.log("showing StartPassages",tale.get("StartPassages").text.readBracketedList()),a=tale.get("StartPassages").text.readBracketedList();for(var b=0;b<a.length;b++)this.display(a[b],null,"quietly")}else console.log("no StartPassages, showing Start"),this.display("Start",null,"quietly")},History.prototype.close=function(a){"use strict";var b=$("passage"+a.title);console.log('closing "'+a.title+'"'),b&&b.parentNode.removeChild(b)},History.prototype.display=function(a,b,c){"use strict",console.log('displaying "'+a+'" '+(c||"")+" from ",b);var d=b,e=$("passage"+a),f,g,h,i;while(d&&d.className.indexOf("passage")===-1)if(d.parentNode.className)d=d.parentNode;else break;if(e){scrollWindowTo(e);return}return f=tale.get(a),this.history.unshift({passage:f,variables:clone(this.history[0].variables)}),g=f.render(),i=function(){c!=="offscreen"&&(d?$("passages").insertBefore(g,d.nextSibling):$("passages").appendChild(g),c!=="quietly"&&(scrollWindowTo(g),fade(g,{fade:"in"})));if(c==="quietly"||c==="offscreen")g.style.visibility="visible"},h=g.getElementsByTagName("img")[0],h?h.onload=function(){i()}:i(),g},History.prototype.restart=function(){"use strict",window.location.hash=""},History.prototype.save=function(a){"use strict";var b="";for(var c=0;c<this.history.length;c++)if(this.history[c].passage&&this.history[c].passage.id){b+=this.history[c].passage.id.toString(36)+".";if(this.history[c].passage.id===a.id)break}return"#"+b.substr(0,b.length-1)},History.prototype.restore=function(){"use strict";var a,b,c;try{if(window.location.hash==="")return!1;a=window.location.hash.replace("#","").split("."),b=[];for(var d=a.length-1;d>=0;d--){c=parseInt(a[d],36);if(!tale.has(c))return!1;console.log("restoring id "+c),b.unshift(this.display(c,null,"offscreen"))}return $("passages").appendChild(b[0]),!0}catch(e){return console.log("restore failed",e),!1}},History.prototype.rewindTo=function(a){function c(){var c;while(b.history[0].passage.title!==a.title)b.close(b.history.shift().passage);b.history[0].variables=clone(b.history[1].variables),a.reset(),c=$("passage"+a.title).childNodes;for(var d=0;d<c.length;d++)c[d].className==="body"&&(removeChildren(c[d]),new Wikifier(c[d],a.text));fade($("passages"),{fade:"in"})}"use strict",console.log('rewinding to "'+a.title+'"');var b=this;fade($("passages"),{fade:"out",onComplete:c})},version.extensions.choiceMacro={major:1,minor:2,revision:0},macros.choice={handler:function(a,b,c){"use strict";var d=document.createElement("a");d.href="#_",d.className="internalLink choice",c[1]?d.innerHTML=c[1]:d.innerHTML=c[0],d.onclick=function(){return macros.choice.activate(d,c[0]),!1},a.appendChild(d)},activate:function(a,b){"use strict";var c=a.parentNode,d=[],e,f,g;while(c.className.indexOf("body")===-1)c=c.parentNode;e=c.parentNode.id.substr(7),f=c.getElementsByTagName("a");for(var h=0;h<f.length;h++)f[h]!==a&&f[h].className.indexOf("choice")!==-1&&(g=document.createElement("span"),g.innerHTML=f[h].innerHTML,g.className="disabled",f[h].parentNode.insertBefore(g,f[h].nextSibling),d.push(f[h]));for(var i=0;i<d.length;i++)d[i].parentNode.removeChild(d[i]);tale.get(e).text="<html>"+c.childNodes[0].innerHTML+"</html>",state.display(b,a)}},version.extensions.displayMacro={major:1,minor:0,revision:0},macros.display={handler:function(a,b,c){"use strict",console.log('<<display>>ing "'+c[0]+'"'),new Wikifier(a,tale.get(c[0]).text),console.log('<<display>> of "'+c[0]+'" complete')}},version.extensions.actionsMacro={major:1,minor:2,revision:0},macros.actions={handler:function(a,b,c){"use strict";var d=insertElement(a,"ul"),e,f,g;state.history[0].variables["actions clicked"]||(state.history[0].variables["actions clicked"]={}),g=function(){this.onclick=function(){state.history[0].variables["actions clicked"][this.id]=!0,state.display(this.id,this)}};for(var h=0;h<c.length;h++){if(state.history[0].variables["actions clicked"][c[h]])continue;e=insertElement(d,"li"),f=Wikifier.createInternalLink(e,c[h]),insertText(f,c[h]),g.call(f)}}},version.extensions.printMacro={major:1,minor:1,revision:0},macros.print={handler:function(place,macroName,params,parser){"use strict";var output;try{output=eval(parser.fullArgs()),output&&new Wikifier(place,output.toString())}catch(e){throwError(place,"bad expression: "+e.message)}}},version.extensions.setMacro={major:1,minor:1,revision:0},macros.set={handler:function(a,b,c,d){"use strict",macros.set.run(d.fullArgs())},run:function(expression){"use strict";try{return eval(Wikifier.parse(expression))}catch(e){console.log("bad expression: "+e.message)}}},version.extensions.ifMacros={major:1,minor:0,revision:0},macros["if"]={handler:function(place,macroName,params,parser){"use strict";var condition=parser.fullArgs(),srcOffset=parser.source.indexOf(">>",parser.matchStart)+2,src=parser.source.slice(srcOffset),endPos=-1,trueClause="",falseClause="";for(var i=0,nesting=1,currentClause=!0;i<src.length;i++){if(src.substr(i,9)==="<<endif>>"){nesting--;if(nesting===0){endPos=srcOffset+i+9;break}}src.substr(i,8)==="<<else>>"&&nesting===1&&(currentClause="false",i+=8),src.substr(i,5)==="<<if "&&nesting++,currentClause===!0?trueClause+=src.charAt(i):falseClause+=src.charAt(i)}try{eval(condition)?new Wikifier(place,trueClause.trim()):new Wikifier(place,falseClause.trim()),endPos!==-1?parser.nextMatch=endPos:throwError(place,"can't find matching endif")}catch(e){throwError(place,"bad condition: "+e.message)}}},macros["else"]=macros.endif={handler:function(){"use strict"}},version.extensions.rememberMacro={major:1,minor:1,revision:0},macros.remember={handler:function(place,macroName,params,parser){"use strict";var statement=parser.fullArgs(),expire=new Date,variable,value,variableSigil;macros.set.run(statement),variableSigil=Wikifier.parse("$"),variableSigil=variableSigil.replace("[","\\["),variableSigil=variableSigil.replace("]","\\]"),variable=statement.match(new RegExp(variableSigil+"(\\w+)","i"))[1],value=eval(Wikifier.parse("$"+variable));switch(typeof value){case"string":value='"'+value.replace(/"/g,'\\"')+'"';break;case"number":break;case"boolean":break;default:throwError(place,"can't remember $"+variable+" ("+typeof value+")");return}expire.setYear(expire.getFullYear()+1),document.cookie=macros.remember.prefix+variable+"="+value+"; expires="+expire.toGMTString()},init:function(){"use strict";var cookies,bits,statement;tale.has("StoryTitle")?macros.remember.prefix=tale.get("StoryTitle").text+"_":macros.remember.prefix="__jonah_",cookies=document.cookie.split(";");for(var i=0;i<cookies.length;i++)bits=cookies[i].split("="),bits[0].trim().indexOf(this.prefix)===0&&(statement=cookies[i].replace(this.prefix,"$"),eval(Wikifier.parse(statement)))}},version.extensions.SilentlyMacro={major:1,minor:0,revision:0},macros.silently={handler:function(a,b,c,d){"use strict";var e=insertElement(null,"div"),f=d.source.indexOf(">>",d.matchStart)+2,g=d.source.slice(f),h=-1,i="";for(var j=0;j<g.length;j++)g.substr(j,15)==="<<endsilently>>"?h=f+j+15:i+=g.charAt(j);h!==-1?(new Wikifier(e,i),d.nextMatch=h):throwError(a,"can't find matching endsilently")}},macros.endsilently={handler:function(){"use strict"}},Passage.prototype.render=function(){"use strict";var a=insertElement(null,"div","passage"+this.title,"passage"),b,c,d,e;a.style.visibility="hidden",b=insertElement(a,"div","","title",this.title),c=insertElement(b,"span","","toolbar");for(var f=0;f<Passage.toolbarItems.length;f++)d=insertElement(c,"a"),insertText(d,Passage.toolbarItems[f].label(a)),d.passage=this,Passage.toolbarItems[f].href?d.href=Passage.toolbarItems[f].href(a):d.href="#_",d.title=Passage.toolbarItems[f].tooltip(a),d.onclick=Passage.toolbarItems[f].activate;return e=insertElement(a,"div","","body"),new Wikifier(e,this.text),a.onmouseover=function(){a.className+=" selected"},a.onmouseout=function(){a.className=a.className.replace(" selected","")},a},Passage.prototype.reset=function(){"use strict",console.log('resetting "'+this.title+'"'),this.text=this.initialText},Passage.toolbarItems=[{label:function(){return"use strict","bookmark"},tooltip:function(){return"use strict","Bookmark this point in the story"},href:function(a){return"use strict",state.save(a)},activate:function(){"use strict"}},{label:function(){return"use strict","rewind to here"},tooltip:function(){return"use strict","Rewind the story to here"},activate:function(){"use strict",state.rewindTo(this.passage)}}],Passage.unescapeLineBreaks=function(a){return"use strict",a&&a!==""?a.replace(/\\n/mg,"\n").replace(/\\/mg,"\\").replace(/\r/mg,""):""},Tale.prototype.has=function(a){"use strict";if(typeof a=="string")return this.passages[a]!==null&&typeof this.passages[a]!="undefined";for(var b in this.passages)if(this.passages[b].id===a)return!0;return!1},Tale.prototype.get=function(a){"use strict";if(typeof a=="string")return this.passages[a]||new Passage(a);for(var b in this.passages)if(this.passages[b].id===a)return this.passages[b]},Tale.prototype.lookup=function(a,b,c){"use strict";var d=[];for(var e in this.passages)if(this.passages.hasOwnProperty(e)){var f=this.passages[e];for(var g=0;g<f[a].length;g++)f[a][g]===b&&d.push(f)}return c||(c="title"),d.sort(function(a,b){return a[c]===b[c]?0:a[c]<b[c]?-1:1}),d},Tale.prototype.reset=function(){"use strict",console.log("resetting all passages");for(var a in this.passages)this.passages.hasOwnProperty(a)&&this.passages[a].reset()},window.onload=function(){"use strict";var styles,scripts;tale=new Tale,setPageElement("storyMenu","StoryMenu",""),setPageElement("storyTitle","StoryTitle","Untitled Story"),setPageElement("storySubtitle","StorySubtitle",""),setPageElement("storyAuthor","StoryAuthor",""),tale.has("StoryTitle")&&(document.title=tale.get("StoryTitle").text,tale.has("StorySubtitle")&&(document.title+=": "+tale.get("StorySubtitle").text));for(var macro in macros)typeof macro.init=="function"&&macro.init();styles=tale.lookup("tags","stylesheet");for(var i=0;i<styles.length;i++)addStyle(styles[i].text);scripts=tale.lookup("tags","script");for(var n=0;n<scripts.length;n++)try{eval(scripts[n].text)}catch(e){window.alert("There is a technical problem with this story ("+scripts[n].title+": "+e.message+"). You may be able "+"to continue reading, but all parts of the story may not "+"work properly.")}state=new History,state.init(),$("restartStory").onclick=function(){return state.restart(),!1},console.log("init complete",tale,state)};
+  })();</script>
 </head>
-<body onload="main()">
-<div id="floater"><div class="container">
-<div id="storyMenu"></div>
-<p><a href="javascript:state.restart()">Restart Story</a></p>
-</div></div>
-<div id="content1"><div id="content2">
-<div id="header"></div><div id="titleLine"></div>
-<h1><span id="storyTitle"></span></h1>
-<h2><span id="storySubtitle"></span></h2>
-<h3><span id="storyAuthor"></span></h3>
-<div id="passages"></div>
-<p id="footer">
-This story was created with <a class="externalLink" href="http://gimcrackd.com/etc/src/">Twee</a> and is powered by <a class="externalLink" href="http://www.tiddlywiki.com/">TiddlyWiki</a>.
-</p>
-</div></div>
-<div id="storeArea">
+<body>
+  <div id="floater">
+    <div class="container">
+      <div id="storyMenu"></div>
+      <p><a id="restartStory" href="#_">Restart Story</a></p>
+    </div>
+  </div>
+  <div id="content1">
+    <div id="content2">
+      <div id="header"></div>
+      <div id="titleLine"></div>
+      <h1><span id="storyTitle"></span></h1>
+      <h2><span id="storySubtitle"></span></h2>
+      <h3><span id="storyAuthor"></span></h3>
+      <div id="passages"></div>
+      <p id="footer">
+      This story was created with <a class="externalLink" href="http://gimcrackd.com/etc/src/">Twee</a> and is powered by <a class="externalLink" href="http://www.tiddlywiki.com/">TiddlyWiki</a>.
+      </p>
+    </div>
+  </div>
+  <div id="storeArea">

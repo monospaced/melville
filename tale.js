@@ -20,22 +20,25 @@
 // none
 //
 
-function Tale()
-{	
-	this.passages = {};
-
-	if (document.normalize)
-		document.normalize();
-		
-	var store = $('storeArea').childNodes;
-	
-	for (var i = 0; i < store.length; i++)
-	{
-		var el = store[i];
-		
-		if (el.getAttribute && (title = el.getAttribute('tiddler')))
-			this.passages[title] = new Passage(title, el, i);
-	};
+function Tale(){
+  'use strict';
+  var store,
+      title,
+      el;
+  this.passages = {};
+  if (document.normalize) {
+    document.normalize();
+  }
+  store = $('storeArea').childNodes;
+  for (var i = 0; i < store.length; i++) {
+    el = store[i];
+    if (el.getAttribute) {
+      title = el.getAttribute('tiddler');
+    }
+    if (title) {
+      this.passages[title] = new Passage(title, el, i);
+    }
+  }
 }
 
 //
@@ -52,20 +55,19 @@ function Tale()
 // boolean
 //
 
-Tale.prototype.has = function (key)
-{
-	// returns whether a passage exists
-		
-	if (typeof key == 'string')
-		return (this.passages[key] != null);
-	else
-	{
-		for (i in this.passages)			
-			if (this.passages[i].id == key)
-				return true;
-				
-		return false;
-	};
+Tale.prototype.has = function(key){
+  'use strict';
+  // returns whether a passage exists
+  if (typeof key === 'string') {
+    return (this.passages[key] !== null && typeof this.passages[key] !== 'undefined');
+  } else {
+    for (var i in this.passages) {
+      if (this.passages[i].id === key) {
+        return true;
+      }
+    }
+    return false;
+  }
 };
 
 //
@@ -85,16 +87,18 @@ Tale.prototype.has = function (key)
 // <Tale.lookup>
 //
 
-Tale.prototype.get = function (key)
-{
-	// returns a passage either by title or its id
-
-	if (typeof key == 'string')
-		return this.passages[key] || new Passage(key);
-	else		
-		for (i in this.passages)
-			if (this.passages[i].id == key)
-				return this.passages[i];
+Tale.prototype.get = function(key){
+  'use strict';
+  // returns a passage either by title or its id
+  if (typeof key === 'string') {
+    return this.passages[key] || new Passage(key);
+  } else {
+    for (var i in this.passages) {
+      if (this.passages[i].id === key) {
+        return this.passages[i];
+      }
+    }
+  }
 };
 
 //
@@ -118,25 +122,30 @@ Tale.prototype.get = function (key)
 // <Tale.get>
 //
 
-Tale.prototype.lookup = function(field, value, sortField)
-{
-	var results = [];
-	for (var t in this.passages)
-	{
-		var passage = this.passages[t];
-		var found = false;
-		
-		for (var i = 0; i < passage[field].length; i++)
-			if (passage[field][i] == value)
-				results.push(passage);
-	}
-
-	if (! sortField)
-		sortField = 'title';
-
-	results.sort(function (a,b) {if(a[sortField] == b[sortField]) return(0); else return (a[sortField] < b[sortField]) ? -1 : +1; });
-	
-	return results;
+Tale.prototype.lookup = function(field, value, sortField){
+  'use strict';
+  var results = [];
+  for (var t in this.passages) {
+    if (this.passages.hasOwnProperty(t)) {
+      var passage = this.passages[t];
+      for (var i = 0; i < passage[field].length; i++) {
+        if (passage[field][i] === value) {
+          results.push(passage);
+        }
+      }
+    }
+  }
+  if (!sortField) {
+    sortField = 'title';
+  }
+  results.sort(function(a,b){
+    if (a[sortField] === b[sortField]) {
+      return(0);
+    } else {
+      return (a[sortField] < b[sortField]) ? -1 : +1;
+    }
+  });
+  return results;
 };
 
 //
@@ -152,10 +161,12 @@ Tale.prototype.lookup = function(field, value, sortField)
 // nothing
 //
 
-Tale.prototype.reset = function()
-{
-	console.log('resetting all passages');
-	
-	for (i in this.passages)
-		this.passages[i].reset();
+Tale.prototype.reset = function(){
+  'use strict';
+  console.log('resetting all passages');
+  for (var i in this.passages) {
+    if (this.passages.hasOwnProperty(i)) {
+      this.passages[i].reset();
+    }
+  }
 };

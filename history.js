@@ -10,21 +10,24 @@
 // Each entry in the history is an object with two properties: *passage*,
 // which corresponds to the <Passage> just displayed, and *variables*.
 // Variables is in itself an object. Each property is a variable set
-// by the story via the <<set>> macro. 
+// by the story via the <<set>> macro.
 //
 
 //
 // Constructor: History
 // Initializes a History object.
-// 
+//
 // Parameters:
 // none
 //
 
-function History()
-{
-	this.history = [{ passage: null, variables: {} }];
-};
+function History(){
+  'use strict';
+  this.history = [{
+    passage: null,
+    variables: {}
+  }];
+}
 
 //
 // Method: init
@@ -40,22 +43,21 @@ function History()
 // nothing
 //
 
-History.prototype.init = function()
-{
-	if (! this.restore())
-		if (tale.has('StartPassages'))
-		{	
-			console.log('showing StartPassages', tale.get('StartPassages').text.readBracketedList());
-			
-			var initials = tale.get('StartPassages').text.readBracketedList();
-			for (var i = 0; i < initials.length; i++)
-				this.display(initials[i], null, 'quietly');
-		}
-		else
-		{
-			console.log('no StartPassages, showing Start');
-			this.display('Start', null, 'quietly');
-		};	
+History.prototype.init = function(){
+  'use strict';
+  var initials;
+  if (!this.restore()) {
+    if (tale.has('StartPassages')) {
+      console.log('showing StartPassages', tale.get('StartPassages').text.readBracketedList());
+      initials = tale.get('StartPassages').text.readBracketedList();
+      for (var i = 0; i < initials.length; i++) {
+        this.display(initials[i], null, 'quietly');
+      }
+    } else {
+      console.log('no StartPassages, showing Start');
+      this.display('Start', null, 'quietly');
+    }
+  }
 };
 
 //
@@ -70,16 +72,14 @@ History.prototype.init = function()
 // nothing
 //
 
-History.prototype.close = function (passage)
-{
-	// we hide the passage immediately, without animation
-	
-	var el = $('passage' + passage.title);
-	
-	console.log('closing "' + passage.title + '"');
-		
-	if (el)
-		el.parentNode.removeChild(el);
+History.prototype.close = function(passage){
+  'use strict';
+  // we hide the passage immediately, without animation
+  var el = $('passage' + passage.title);
+  console.log('closing "' + passage.title + '"');
+  if (el) {
+    el.parentNode.removeChild(el);
+  }
 };
 
 //
@@ -103,59 +103,65 @@ History.prototype.close = function (passage)
 // The DOM element containing the passage on the page.
 //
 
-History.prototype.display = function (title, link, render)
-{	
-	console.log('displaying "' + title + '" ' + (render || '') + ' from ', link);	
-	
-	// find enclosing passage of the link
-		
-	var sourcePassage = link;
-	
-	while (sourcePassage && (sourcePassage.className.indexOf('passage') == -1))
-		if (sourcePassage.parentNode.className)
-			sourcePassage = sourcePassage.parentNode;
-		else
-			break;
-
-	// check if passage is already displayed
-	
-	if (el = $('passage' + title))
-	{
-		scrollWindowTo(el);
-		return;
-	};
-	
-	// create a fresh entry in the history
-	
-	var passage = tale.get(title);
-	
-	this.history.unshift({ passage: passage,
-													variables: clone(this.history[0].variables) } );
-	
-	// add it to the page
-	
-	var div = passage.render();
-	
-	if (render != 'offscreen')
-	{
-		if (sourcePassage)
-			$('passages').insertBefore(div, sourcePassage.nextSibling);	
-		else
-			$('passages').appendChild(div);
-		
-		// animate its appearance
-		
-		if (render != 'quietly')
-		{
-			scrollWindowTo(div);
-			fade(div, { fade: 'in' });
-		}
-	}
-	
-	if ((render == 'quietly') || (render == 'offscreen'))
-		div.style.visibility = 'visible';
-		
-	return div;	
+History.prototype.display = function(title, link, render){
+  'use strict';
+  console.log('displaying "' + title + '" ' + (render || '') + ' from ', link);
+  // find enclosing passage of the link
+  var sourcePassage = link,
+      el = $('passage' + title),
+      passage,
+      div,
+      img,
+      show;
+  while (sourcePassage && (sourcePassage.className.indexOf('passage') === -1)) {
+    if (sourcePassage.parentNode.className) {
+      sourcePassage = sourcePassage.parentNode;
+    } else {
+      break;
+    }
+  }
+  // check if passage is already displayed
+  if (el) {
+    scrollWindowTo(el);
+    return;
+  }
+  // create a fresh entry in the history
+  passage = tale.get(title);
+  this.history.unshift({
+    passage: passage,
+    variables: clone(this.history[0].variables)
+  });
+  // add it to the page
+  div = passage.render();
+  // ensure images have loaded before scrollWindow
+  show = function(){
+    if (render !== 'offscreen') {
+      if (sourcePassage) {
+        $('passages').insertBefore(div, sourcePassage.nextSibling);
+      } else {
+        $('passages').appendChild(div);
+      }
+      // animate its appearance
+      if (render !== 'quietly') {
+        scrollWindowTo(div);
+        fade(div, {
+          fade: 'in'
+        });
+      }
+    }
+    if ((render === 'quietly') || (render === 'offscreen')) {
+      div.style.visibility = 'visible';
+    }
+  };
+  img = div.getElementsByTagName('img')[0];
+  if (img) {
+    img.onload = function(){
+      show();
+    };
+  } else {
+    show();
+  }
+  return div;
 };
 
 //
@@ -170,12 +176,11 @@ History.prototype.display = function (title, link, render)
 // none
 //
 
-History.prototype.restart = function()
-{
-	// clear any bookmark
-	// this has the side effect of forcing a page reload
-	
-	window.location.hash = '';
+History.prototype.restart = function(){
+  'use strict';
+  // clear any bookmark
+  // this has the side effect of forcing a page reload
+  window.location.hash = '';
 };
 
 //
@@ -188,32 +193,26 @@ History.prototype.restart = function()
 // Parameters:
 // passage - a <Passage> whose point in the history to save.
 //           This parameter is optional -- if omitted, then the
-//					 entire story's history is saved.
+//           entire story's history is saved.
 //
 // Returns:
 // A hash to append to the page's URL.
 //
 
-History.prototype.save = function (passage)
-{
-	var order = '';
-
-	// encode our history
-	
-	for (var i = 0; i < this.history.length; i++)
-	{
-		if ((this.history[i].passage) && (this.history[i].passage.id))
-		{
-			order += this.history[i].passage.id.toString(36) + '.';
-		
-			if (this.history[i].passage.id == passage.id)
-				break;
-		}
-	};
-	
-	// strip the trailing period
-	
-	return '#' + order.substr(0, order.length - 1);
+History.prototype.save = function(passage){
+  'use strict';
+  var order = '';
+  // encode our history
+  for (var i = 0; i < this.history.length; i++) {
+    if (this.history[i].passage && this.history[i].passage.id) {
+      order += this.history[i].passage.id.toString(36) + '.';
+      if (this.history[i].passage.id === passage.id) {
+        break;
+      }
+    }
+  }
+  // strip the trailing period
+  return '#' + order.substr(0, order.length - 1);
 };
 
 //
@@ -227,42 +226,37 @@ History.prototype.save = function (passage)
 // Whether this method actually restored anything.
 //
 
-History.prototype.restore = function ()
-{
-	try
-	{
-		if (window.location.hash == '')
-			return false;
-	
-		var order = window.location.hash.replace('#', '').split('.');
-		var passages = [];
-		
-		// render the passages offscreen in the order the reader clicked them
-		// we can't show them, because contents along the way may be
-		// incorrect (e.g. <<choice>>)
-		
-		for (var i = order.length - 1; i >= 0; i--)
-		{
-			var id = parseInt(order[i], 36);
-			
-			if (! tale.has(id))
-				return false;
-			
-			console.log('restoring id ' + id);			
-			passages.unshift(this.display(id, null, 'offscreen'));
-		};
-		
-		// our state is now correct
-		// we now display the last passage
-		
-		$('passages').appendChild(passages[0]);		
-		return true;
-	}
-	catch (e)
-	{
-		console.log("restore failed", e);
-		return false;
-	};
+History.prototype.restore = function (){
+  'use strict';
+  var order,
+      passages,
+      id;
+  try {
+    if (window.location.hash === '') {
+      return false;
+    }
+    order = window.location.hash.replace('#', '').split('.');
+    passages = [];
+    // render the passages offscreen in the order the reader clicked them
+    // we can't show them, because contents along the way may be
+    // incorrect (e.g. <<choice>>)
+    for (var i = order.length - 1; i >= 0; i--) {
+      id = parseInt(order[i], 36);
+      if (!tale.has(id)) {
+        return false;
+      }
+      console.log('restoring id ' + id);
+      passages.unshift(this.display(id, null, 'offscreen'));
+    }
+    // our state is now correct
+    // we now display the last passage
+    $('passages').appendChild(passages[0]);
+    return true;
+  }
+  catch(e){
+    console.log('restore failed', e);
+    return false;
+  }
 };
 
 //
@@ -276,38 +270,34 @@ History.prototype.restore = function ()
 // nothing
 //
 
-History.prototype.rewindTo = function (passage)
-{
-	// fade out the story while we work
-	
-	console.log('rewinding to "' + passage.title + '"');
-	
-	var self = this;
-	
-	fade($('passages'), { fade: 'out', onComplete: work });
-
-	function work()
-	{
-		// delete passages after the one we are rewinding to
-			
-		while (self.history[0].passage.title != passage.title)
-			self.close(self.history.shift().passage);
-		
-		// i is now the index of the passage we are rewinding to
-		// we restore it to its original state
-	
-		self.history[0].variables = clone(self.history[1].variables);		
-		passage.reset();
-
-		var els = $('passage' + passage.title).childNodes;
-		
-		for (var i = 0; i < els.length; i++)
-			if (els[i].className == 'body')
-			{
-				removeChildren(els[i]);
-				new Wikifier(els[i], passage.text);
-			};
-			
-		fade($('passages'), { fade: 'in' });
-	};
+History.prototype.rewindTo = function(passage){
+  'use strict';
+  // fade out the story while we work
+  console.log('rewinding to "' + passage.title + '"');
+  var self = this;
+  function work(){
+    var els;
+    // delete passages after the one we are rewinding to
+    while (self.history[0].passage.title !== passage.title) {
+      self.close(self.history.shift().passage);
+    }
+    // i is now the index of the passage we are rewinding to
+    // we restore it to its original state
+    self.history[0].variables = clone(self.history[1].variables);
+    passage.reset();
+    els = $('passage' + passage.title).childNodes;
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].className === 'body') {
+        removeChildren(els[i]);
+        new Wikifier(els[i], passage.text);
+      }
+    }
+    fade($('passages'), {
+      fade: 'in'
+    });
+  }
+  fade($('passages'), {
+    fade: 'out',
+    onComplete: work
+  });
 };
