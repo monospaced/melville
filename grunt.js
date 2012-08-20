@@ -14,9 +14,6 @@ module.exports = function(grunt) {
     lint: {
       files: ['grunt.js', '<config:concat.js.dest>']
     },
-    qunit: {
-      files: ['test/**/*.html']
-    },
     concat: {
       js: {
         src: ['<banner:meta.banner>',
@@ -28,11 +25,11 @@ module.exports = function(grunt) {
               '<file_strip_banner:passage.js>',
               '<file_strip_banner:tale.js>',
               '<file_strip_banner:init.js>'],
-        dest: 'melville.js'
+        dest: 'templates/script.js'
       },
       dist: {
         src: ['<file_strip_banner:templates/head.html>',
-              '<file_strip_banner:style.css>',
+              '<config:cssmin.dist.dest>',
               '<file_strip_banner:templates/separator.html>',
               '<config:min.dist.dest>',
               '<file_strip_banner:templates/body.html>'],
@@ -42,13 +39,19 @@ module.exports = function(grunt) {
     min: {
       dist: {
         src: ['<config:concat.js.dest>'],
-        dest: 'melville.min.js'
+        dest: 'templates/script.min.js'
+      }
+    },
+    cssmin: {
+      dist: {
+        src: 'style.css',
+        dest: 'templates/style.min.css'
       }
     },
     watch: {
       files: ['**/*.*',
               '*.*'],
-      tasks: 'concat:js min concat:dist'
+      tasks: 'concat:js min cssmin concat:dist'
     },
     jshint: {
       options: {
@@ -78,8 +81,10 @@ module.exports = function(grunt) {
       }
     }
   });
-
+  
+  grunt.loadNpmTasks('grunt-css');
+  
   // Default task.
-  grunt.registerTask('default', 'concat:js lint min concat:dist');
+  grunt.registerTask('default', 'concat:js lint min cssmin concat:dist');
 
 };
