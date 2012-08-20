@@ -11,12 +11,4 @@ Fork of [tweecode/jonah](https://github.com/tweecode/jonah) with the following a
 
 ## Usage
 
-### Twee
-
-Copy [header.html](https://github.com/monospaced/melville/blob/master/header.html) to a new folder called `melville` in `twee/targets/`, then use the following syntax:
-
-    twee -t melville source.tw > target.html
-
-### Twine
-
-Twine doesn't allow new Story Formats to be plugged in (yet), but you can try out Melville in Twine by overwriting `header.html` in `/targets/jonah/` with [melville/header.html](https://github.com/monospaced/melville/blob/master/header.html). The Jonah Story Format option will then output to Melville. In case you need to restore to Jonah, here’s the original [jonah/header.html](https://github.com/tweecode/jonah/blob/master/header.html).
+You can try out Melville by overwriting `header.html` in `/targets/jonah/` with [melville/header.html](https://github.com/monospaced/melville/blob/master/header.html). The Jonah Story Format option will then output to Melville. In case you need to restore to Jonah, here’s the original [jonah/header.html](https://github.com/tweecode/jonah/blob/master/header.html).
