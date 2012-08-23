@@ -275,7 +275,7 @@ macros.remember = {
     if (tale.has('StoryTitle')) {
       macros.remember.prefix = tale.get('StoryTitle').text + '_';
     } else {
-      macros.remember.prefix = '__jonah_';
+      macros.remember.prefix = '__melville_';
     }
     // restore all cookie'd values to local variables
     cookies = document.cookie.split(';');

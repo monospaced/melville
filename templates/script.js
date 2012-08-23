@@ -1,4 +1,4 @@
-/*! Melville - v0.1.0 - 2012-08-20
+/*! Melville - v0.1.0 - 2012-08-23
 * http://scottboyle.co.uk/
 * Copyright (c) 2012 Monospaced; Licensed MIT */
 
@@ -1750,7 +1750,7 @@ macros.remember = {
     if (tale.has('StoryTitle')) {
       macros.remember.prefix = tale.get('StoryTitle').text + '_';
     } else {
-      macros.remember.prefix = '__jonah_';
+      macros.remember.prefix = '__melville_';
     }
     // restore all cookie'd values to local variables
     cookies = document.cookie.split(';');
